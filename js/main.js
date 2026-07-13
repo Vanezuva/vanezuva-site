@@ -47,6 +47,11 @@
     w.addEventListener('click', function () { open(index); });
   });
 
+  // title links inside cards go to the sales page without opening the lightbox
+  document.querySelectorAll('.work .meta a').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.stopPropagation(); });
+  });
+
   var current = -1;
 
   function show(index) {
