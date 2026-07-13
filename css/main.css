@@ -75,7 +75,7 @@ nav a.active, nav a:hover { color: var(--text); }
   color: var(--text-dim);
 }
 .collect-menu summary::-webkit-details-marker { display: none; }
-.collect-menu summary::after { content: " ▾"; font-size: 0.7em; }
+.collect-menu summary::marker { content: ""; }
 .collect-menu summary:hover, .collect-menu[open] summary { color: var(--text); }
 .collect-list {
   position: absolute;
@@ -379,7 +379,26 @@ footer { border-top: 1px solid var(--line); }
 }
 
 @media (max-width: 640px) {
+  body { overflow-x: hidden; }
   .wordmark { letter-spacing: 0.3em; }
-  nav { gap: 1.1rem; }
+  /* the menu row scrolls sideways instead of pushing the page wider */
+  nav {
+    gap: 1.1rem;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  /* open the Collect panel full-width under the header so the scrolling menu can't clip it */
+  .collect-menu { position: static; }
+  .collect-list {
+    left: 0;
+    right: 0;
+    top: 100%;
+  }
   main { padding: 2rem 1rem 4rem; }
 }
