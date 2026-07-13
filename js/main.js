@@ -1,3 +1,12 @@
+// Close the Collect dropdown when clicking anywhere else
+(function () {
+  var menu = document.querySelector('.collect-menu');
+  if (!menu) return;
+  document.addEventListener('click', function (e) {
+    if (menu.hasAttribute('open') && !menu.contains(e.target)) menu.removeAttribute('open');
+  });
+})();
+
 // Lightbox for gallery works, with prev/next navigation.
 // The page's hero video (if any) is included in the cycle.
 (function () {
