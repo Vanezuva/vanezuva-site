@@ -64,6 +64,20 @@ nav a {
 }
 nav a.active, nav a:hover { color: var(--text); }
 
+/* hamburger button (hidden on desktop) */
+.nav-toggle { display: none; background: none; border: 0; padding: 0.4rem; cursor: pointer; }
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  margin: 5px 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+body.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+body.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+body.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
 /* Collect dropdown */
 .collect-menu { position: relative; }
 .collect-menu summary {
@@ -382,28 +396,39 @@ footer { border-top: 1px solid var(--line); }
 @media (max-width: 640px) {
   body { overflow-x: hidden; }
   .wordmark { letter-spacing: 0.3em; }
-  /* the menu row scrolls sideways instead of pushing the page wider */
+  .header-inner { flex-wrap: nowrap; align-items: center; }
+  .nav-toggle { display: block; }
+  /* the menu becomes a vertical panel under the header, opened by the hamburger */
   nav {
-    gap: 1.1rem;
-    max-width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  nav::-webkit-scrollbar { display: none; }
-  /* Pin the Collect panel with position:fixed so the horizontally-scrolling nav can't
-     clip it (iOS Safari clips absolutely-positioned children of an overflow scroller). */
-  .collect-menu { position: static; }
-  .collect-list {
+    display: none;
     position: fixed;
+    top: var(--header-h, 64px);
     left: 0;
     right: 0;
-    top: var(--header-h, 100px);
-    min-width: 0;
+    max-height: calc(100vh - var(--header-h, 64px));
+    overflow-y: auto;
+    flex-direction: column;
+    gap: 0;
+    background: var(--bg-raised);
     border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    z-index: 70;
   }
+  body.nav-open nav { display: flex; }
+  nav > a {
+    padding: 0.95rem 1.2rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.85rem;
+  }
+  nav > a:last-child { border-bottom: 0; }
+  .collect-menu { position: static; border-bottom: 1px solid var(--line); }
+  .collect-menu summary { padding: 0.95rem 1.2rem; }
+  .collect-list {
+    position: static;
+    min-width: 0;
+    border: 0;
+    background: var(--bg);
+  }
+  .collect-list a { padding-left: 2.2rem; }
   main { padding: 2rem 1rem 4rem; }
 }

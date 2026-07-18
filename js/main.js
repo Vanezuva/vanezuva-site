@@ -9,6 +9,32 @@
   window.addEventListener('resize', setHeaderHeight);
   window.addEventListener('orientationchange', setHeaderHeight);
 
+  // hamburger toggle for the mobile menu panel
+  var toggle = document.getElementById('navToggle');
+  var nav = document.querySelector('nav');
+  function closeNav() {
+    document.body.classList.remove('nav-open');
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  }
+  if (toggle && nav) {
+    toggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = document.body.classList.toggle('nav-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      // show the Collect platforms expanded whenever the menu opens
+      var d = document.querySelector('.collect-menu');
+      if (d && open) d.setAttribute('open', '');
+    });
+    // choosing a page closes the panel (platform links open a new tab, so close too)
+    nav.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', closeNav);
+    });
+    // tapping anywhere outside the header closes it
+    document.addEventListener('click', function (e) {
+      if (document.body.classList.contains('nav-open') && !e.target.closest('header')) closeNav();
+    });
+  }
+
   var menu = document.querySelector('.collect-menu');
   if (!menu) return;
   var summary = menu.querySelector('summary');
