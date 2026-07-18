@@ -73,6 +73,7 @@ nav a.active, nav a:hover { color: var(--text); }
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-dim);
+  touch-action: manipulation;
 }
 .collect-menu summary::-webkit-details-marker { display: none; }
 .collect-menu summary::marker { content: ""; }
@@ -393,12 +394,16 @@ footer { border-top: 1px solid var(--line); }
     padding-bottom: 2px;
   }
   nav::-webkit-scrollbar { display: none; }
-  /* open the Collect panel full-width under the header so the scrolling menu can't clip it */
+  /* Pin the Collect panel with position:fixed so the horizontally-scrolling nav can't
+     clip it (iOS Safari clips absolutely-positioned children of an overflow scroller). */
   .collect-menu { position: static; }
   .collect-list {
+    position: fixed;
     left: 0;
     right: 0;
-    top: 100%;
+    top: var(--header-h, 100px);
+    min-width: 0;
+    border-top: 1px solid var(--line);
   }
   main { padding: 2rem 1rem 4rem; }
 }

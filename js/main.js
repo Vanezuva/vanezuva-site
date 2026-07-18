@@ -1,7 +1,34 @@
-// Close the Collect dropdown when clicking anywhere else
+// Collect dropdown: reliable toggle + keep the mobile panel pinned under the header
 (function () {
+  // expose the header's real height so the mobile (fixed) panel sits right below it
+  var header = document.querySelector('header');
+  function setHeaderHeight() {
+    if (header) document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+  }
+  setHeaderHeight();
+  window.addEventListener('resize', setHeaderHeight);
+  window.addEventListener('orientationchange', setHeaderHeight);
+
   var menu = document.querySelector('.collect-menu');
   if (!menu) return;
+  var summary = menu.querySelector('summary');
+
+  // take over the toggle so a tap reliably opens/closes it (native <details> can be
+  // flaky on touch inside the horizontally-scrolling nav)
+  if (summary) {
+    summary.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (menu.hasAttribute('open')) menu.removeAttribute('open');
+      else menu.setAttribute('open', '');
+    });
+  }
+
+  // close when a platform link is chosen (they open in a new tab)
+  menu.querySelectorAll('.collect-list a').forEach(function (a) {
+    a.addEventListener('click', function () { menu.removeAttribute('open'); });
+  });
+
+  // close when tapping anywhere else
   document.addEventListener('click', function (e) {
     if (menu.hasAttribute('open') && !menu.contains(e.target)) menu.removeAttribute('open');
   });
