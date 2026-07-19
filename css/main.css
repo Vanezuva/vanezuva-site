@@ -343,6 +343,14 @@ main {
 .cta.secondary { border-color: var(--line); color: var(--text-dim); }
 .cta.secondary:hover { background: none; border-color: var(--text); color: var(--text); }
 
+/* ---------- exhibition history (Exhibitions page) ---------- */
+.exhibition-history {
+  margin-top: 4.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--line);
+  max-width: 46rem;
+}
+
 /* ---------- contact form ---------- */
 .contact-form { margin: 2rem 0 3rem; display: flex; flex-direction: column; }
 .contact-form label {
