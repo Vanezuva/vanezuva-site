@@ -102,6 +102,7 @@
       video: w.dataset.video,
       image: w.dataset.image,
       youtube: w.dataset.youtube,
+      start: w.dataset.start,
       title: w.dataset.title || '',
       sub: w.dataset.sub || '',
       link: w.dataset.link,
@@ -126,7 +127,7 @@
       var wrap = document.createElement('div');
       wrap.className = 'lb-embed';
       var f = document.createElement('iframe');
-      f.src = 'https://www.youtube-nocookie.com/embed/' + e.youtube + '?autoplay=1&rel=0';
+      f.src = 'https://www.youtube-nocookie.com/embed/' + e.youtube + '?autoplay=1&rel=0' + (e.start ? '&start=' + e.start : '');
       f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';
       f.allowFullscreen = true;
       f.setAttribute('title', e.title);
