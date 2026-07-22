@@ -101,6 +101,7 @@
     entries.push({
       video: w.dataset.video,
       image: w.dataset.image,
+      youtube: w.dataset.youtube,
       title: w.dataset.title || '',
       sub: w.dataset.sub || '',
       link: w.dataset.link,
@@ -120,7 +121,18 @@
     current = (index + entries.length) % entries.length;
     var e = entries[current];
     media.innerHTML = '';
-    if (e.video) {
+    if (e.youtube) {
+      // privacy-friendly: nothing loads from YouTube until this point (on click)
+      var wrap = document.createElement('div');
+      wrap.className = 'lb-embed';
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + e.youtube + '?autoplay=1&rel=0';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.allowFullscreen = true;
+      f.setAttribute('title', e.title);
+      wrap.appendChild(f);
+      media.appendChild(wrap);
+    } else if (e.video) {
       var v = document.createElement('video');
       v.src = e.video;
       v.controls = true;
