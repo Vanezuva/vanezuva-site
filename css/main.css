@@ -293,6 +293,22 @@ main {
   gap: 0.8rem;
 }
 .cv li .year { color: var(--text-dim); }
+/* linked entries read as clickable without needing hover */
+.cv li a {
+  text-decoration: underline;
+  text-decoration-color: var(--text-dim);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.cv li a::after {
+  content: "\2197";
+  margin-left: 0.3em;
+  font-size: 0.85em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.cv li a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.cv li a:hover::after { color: var(--accent); }
 
 .press-shots {
   display: grid;
