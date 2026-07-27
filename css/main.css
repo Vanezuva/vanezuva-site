@@ -135,6 +135,17 @@ main {
   margin-bottom: 2.5rem;
 }
 
+/* one-line orienting statement under the homepage hero */
+.site-intro {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 56ch;
+  margin-bottom: 3.5rem;
+}
+@media (max-width: 640px) {
+  .site-intro { font-size: 1.02rem; margin-bottom: 2.5rem; }
+}
+
 /* ---------- hero ---------- */
 .hero { margin-bottom: 3.5rem; }
 .hero video, .hero img {
