@@ -1,3 +1,7 @@
+// Marks that scripting is on, so CSS can hide reveal elements until they enter view.
+document.documentElement.classList.add('js');
+var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
 // Collect dropdown: reliable toggle + keep the mobile panel pinned under the header
 (function () {
   // expose the header's real height so the mobile (fixed) panel sits right below it
@@ -60,6 +64,73 @@
   });
 })();
 
+// Elements with .reveal fade up once they enter the viewport.
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  els.forEach(function (el) { io.observe(el); });
+})();
+
+// Gallery cards with data-preview play a short silent clip over the poster:
+// on hover where there is a mouse, while in view on touch screens.
+(function () {
+  var cards = document.querySelectorAll('.work[data-preview]');
+  if (!cards.length || reduceMotion) return;
+  var conn = navigator.connection;
+  if (conn && conn.saveData) return;
+  var hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  function ensure(card) {
+    var v = card.querySelector('video.preview');
+    if (v) return v;
+    v = document.createElement('video');
+    v.className = 'preview';
+    v.muted = true;
+    v.loop = true;
+    v.playsInline = true;
+    v.setAttribute('muted', '');
+    v.setAttribute('playsinline', '');
+    v.setAttribute('aria-hidden', 'true');
+    v.preload = 'none';
+    v.src = card.dataset.preview;
+    // only fade in once frames are actually being shown
+    v.addEventListener('playing', function () { card.classList.add('playing'); });
+    var thumb = card.querySelector('.thumb');
+    if (thumb) thumb.appendChild(v);
+    return v;
+  }
+  function start(card) {
+    var p = ensure(card).play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  function stop(card) {
+    var v = card.querySelector('video.preview');
+    if (v) v.pause();
+    card.classList.remove('playing');
+  }
+
+  if (hoverable) {
+    cards.forEach(function (c) {
+      c.addEventListener('mouseenter', function () { start(c); });
+      c.addEventListener('mouseleave', function () { stop(c); });
+    });
+  } else if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) start(en.target); else stop(en.target); });
+    }, { threshold: 0.6 });
+    cards.forEach(function (c) { io.observe(c); });
+  }
+})();
+
 // Lightbox for gallery works, with prev/next navigation.
 // The page's hero video (if any) is included in the cycle.
 (function () {
@@ -75,18 +146,44 @@
   // hero video first in the cycle
   var hero = document.querySelector('.hero');
   var heroVideo = hero && hero.querySelector('video[src]');
+  var heroInView = true;
   if (heroVideo) {
     var cap = hero.querySelector('.hero-caption');
     entries.push({
       video: heroVideo.getAttribute('src'),
       title: cap ? (cap.querySelector('.title') || {}).textContent || '' : '',
-      sub: cap ? (cap.querySelector('span:last-child') || {}).textContent || '' : ''
+      sub: cap ? (cap.querySelector('.sub') || cap.querySelector('span:last-child') || {}).textContent || '' : ''
     });
     // heroes without controls (homepage loop) open the lightbox on click
     if (!heroVideo.controls) {
       heroVideo.style.cursor = 'pointer';
       heroVideo.addEventListener('click', function () { open(0); });
+
+      // pause the loop while it is off screen: no decoding, and no sound after the visitor scrolls on
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (ents) {
+          ents.forEach(function (en) {
+            heroInView = en.isIntersecting;
+            if (lb.classList.contains('open')) return;
+            if (heroInView) { var p = heroVideo.play(); if (p && p.catch) p.catch(function () {}); }
+            else heroVideo.pause();
+          });
+        }, { threshold: 0.15 }).observe(hero);
+      }
     }
+  }
+
+  // sound toggle on the homepage hero (autoplay must start muted; this is the visitor's choice)
+  var soundBtn = document.getElementById('heroSound');
+  if (soundBtn && heroVideo) {
+    soundBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      heroVideo.muted = !heroVideo.muted;
+      var on = !heroVideo.muted;
+      soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      soundBtn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+      if (on && heroVideo.paused) { var p = heroVideo.play(); if (p && p.catch) p.catch(function () {}); }
+    });
   }
 
   var heroOffset = entries.length;
@@ -117,6 +214,7 @@
   });
 
   var current = -1;
+  var clearTimer = null;
 
   function show(index) {
     current = (index + entries.length) % entries.length;
@@ -158,6 +256,7 @@
   }
 
   function open(index) {
+    if (clearTimer) { clearTimeout(clearTimer); clearTimer = null; }
     show(index);
     lb.classList.add('open');
     lb.setAttribute('aria-hidden', 'false');
@@ -166,12 +265,20 @@
   }
 
   function close() {
+    // stop playback at once; clear the frame after the fade so it does not empty mid-transition
+    var playing = media.querySelector('video');
+    if (playing) playing.pause();
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden', 'true');
-    media.innerHTML = '';
     current = -1;
     document.body.style.overflow = '';
-    if (heroVideo && !heroVideo.controls) heroVideo.play();
+    clearTimer = setTimeout(function () {
+      clearTimer = null;
+      if (!lb.classList.contains('open')) media.innerHTML = '';
+    }, reduceMotion ? 0 : 320);
+    if (heroVideo && !heroVideo.controls && heroInView) {
+      var p = heroVideo.play(); if (p && p.catch) p.catch(function () {});
+    }
   }
 
   function step(delta) {

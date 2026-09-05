@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.vanezuva.com/">
   <meta property="og:image" content="https://www.vanezuva.com/media/airwaves_white_noise_tuning_poster.jpg">
-  <link rel="stylesheet" href="css/main.css?v=14">
+  <link rel="stylesheet" href="css/main.css?v=15">
 </head>
 <body>
 
@@ -41,25 +41,30 @@
   </div>
 </header>
 
-<main>
-
-  <section class="hero">
+<section class="hero hero-full">
     <video src="media/airwaves_white_noise_tuning.mp4"
            poster="media/airwaves_white_noise_tuning_poster.jpg"
            autoplay muted loop playsinline></video>
     <div class="hero-caption">
-      <span class="title">AIRWAVES (white noise tuning)</span>
-      <span>single-channel video</span>
+      <span class="hero-chip"><span class="title">AIRWAVES (white noise tuning)</span><span class="sub">single-channel video</span></span>
+    <button class="hero-chip sound-toggle" id="heroSound" type="button" aria-pressed="false" aria-label="Turn sound on">
+      <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+      <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+      <span>Sound</span>
+    </button>
     </div>
-  </section>
+    <span class="scroll-cue" aria-hidden="true"></span>
+</section>
 
-  <p class="site-intro">Interdisciplinary artist and cultural researcher working across video, sound, photography, AI, and blockchain.</p>
+<main>
 
-  <h1 class="page-title">Selected Work</h1>
+  <p class="site-intro reveal">Interdisciplinary artist and cultural researcher working across video, sound, photography, AI, and blockchain.</p>
+
+  <h1 class="page-title reveal">Selected Work</h1>
 
   <section class="grid" id="grid">
 
-    <article class="work" data-href="/airwaves-ripple-effects">
+    <article class="work reveal" data-href="/airwaves-ripple-effects" data-preview="media/previews/airwaves_ripple_effects.mp4">
       <div class="thumb">
         <img src="media/ripple_effects_still.jpg" alt="AIRWAVES: Ripple Effects — video still" loading="lazy">
         <span class="badge">Project</span>
@@ -70,7 +75,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/orinoco_portals.mp4"
+    <article class="work reveal" data-video="media/orinoco_portals.mp4" data-preview="media/previews/orinoco_portals.mp4"
              data-title="Orinoco (PORTals)" data-sub="single-channel video, 0:56"
              data-link="https://objkt.com/tokens/KT1LruoY7jir29GUMUYwxnYsbmiVmNcaML7A/23" data-linklabel="Collect ↗">
       <div class="thumb">
@@ -83,7 +88,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/raw_materials_i.mp4"
+    <article class="work reveal" data-video="media/raw_materials_i.mp4" data-preview="media/previews/raw_materials_i.mp4"
              data-title="RAW MATERIALS I" data-sub="single-channel video, 0:48"
              data-link="https://objkt.com/tokens/KT1C41eUvXLpCamL5h27aBqhUE7v2kXi9KpT/1" data-linklabel="Collect ↗">
       <div class="thumb">
@@ -96,7 +101,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/raw_materials_ii.mp4"
+    <article class="work reveal" data-video="media/raw_materials_ii.mp4" data-preview="media/previews/raw_materials_ii.mp4"
              data-title="RAW MATERIALS II" data-sub="single-channel video, 1:13"
              data-link="https://objkt.com/tokens/KT1C41eUvXLpCamL5h27aBqhUE7v2kXi9KpT/8" data-linklabel="Collect ↗">
       <div class="thumb">
@@ -109,7 +114,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/ripple_clip_1.mp4"
+    <article class="work reveal" data-video="media/ripple_clip_1.mp4" data-preview="media/previews/ripple_clip_1.mp4"
              data-title="AIRWAVES (Signal #1)" data-sub="single-channel video, 0:10">
       <div class="thumb">
         <img src="media/airwaves_signal_1.jpg" alt="AIRWAVES (Signal #1) — video still" loading="lazy">
@@ -121,7 +126,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/airwaves_signal_2.mp4"
+    <article class="work reveal" data-video="media/airwaves_signal_2.mp4" data-preview="media/previews/airwaves_signal_2.mp4"
              data-title="AIRWAVES (Signal #2)" data-sub="single-channel video, 0:36"
              data-link="https://www.transient.xyz/mint/airwaves-signal-2" data-linklabel="Collect ↗">
       <div class="thumb">
@@ -134,7 +139,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/water_veins.mp4"
+    <article class="work reveal" data-video="media/water_veins.mp4" data-preview="media/previews/water_veins.mp4"
              data-title="Water (Veins)" data-sub="single-channel video, 0:11"
              data-link="https://www.transient.xyz/mint/water-veins" data-linklabel="Collect ↗">
       <div class="thumb">
@@ -147,7 +152,7 @@
       </div>
     </article>
 
-    <article class="work" data-video="media/caja_de_ritmo.mp4"
+    <article class="work reveal" data-video="media/caja_de_ritmo.mp4" data-preview="media/previews/caja_de_ritmo.mp4"
              data-title="CAJA DE RITMO [BEAT BOX]" data-sub="single-channel video, 3:59, 2024">
       <div class="thumb">
         <img src="media/caja_de_ritmo.jpg" alt="CAJA DE RITMO [BEAT BOX] — video still" loading="lazy">
@@ -188,7 +193,7 @@
   </div>
 </footer>
 
-<script src="js/main.js?v=10"></script>
+<script src="js/main.js?v=11"></script>
   <!-- Vercel Web Analytics (privacy-friendly, cookieless) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
