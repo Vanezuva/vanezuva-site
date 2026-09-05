@@ -627,6 +627,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   object-fit: cover;
 }
 .hero-chip {
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
@@ -641,7 +642,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   backdrop-filter: blur(6px);
 }
 .hero-chip .sub { color: var(--text-dim); }
-.sound-toggle {
+.sound-toggle, .hero-play {
   border: 0;
   font: inherit;
   font-size: 0.7rem;
@@ -651,7 +652,10 @@ html.js .reveal.in { opacity: 1; transform: none; }
   color: var(--text-dim);
 }
 .sound-toggle:hover, .sound-toggle[aria-pressed="true"] { color: var(--text); }
-.sound-toggle:focus-visible { outline: 1px solid var(--text); outline-offset: 2px; }
+.hero-play { color: var(--text); }
+.hero-play:hover { color: var(--accent); }
+.hero-play svg { width: 13px; height: 13px; display: block; }
+.sound-toggle:focus-visible, .hero-play:focus-visible { outline: 1px solid var(--text); outline-offset: 2px; }
 .sound-toggle svg { width: 15px; height: 15px; display: block; }
 .sound-toggle .on { display: none; }
 .sound-toggle[aria-pressed="true"] .on { display: block; }
@@ -711,7 +715,9 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .hero-full .hero-caption, .hero-band .hero-caption { padding: 0.8rem 1rem; }
   .hero-band { height: 42svh; min-height: 240px; }
   .hero-chip { font-size: 0.64rem; padding: 0.42rem 0.65rem; }
-  .hero-full .hero-chip:not(.sound-toggle) { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+  /* caption chip on its own row; Watch and Sound share the row below it */
+  .hero-full .hero-caption > span.hero-chip { flex-basis: 100%; flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+  .hero-play, .sound-toggle { white-space: nowrap; }
   .scroll-cue { display: none; }
   .hero-wide .hero-caption { padding: 0.6rem 1rem 0; }
 }
