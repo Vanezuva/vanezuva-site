@@ -1,4 +1,21 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/notes",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/notes/:slug",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/feed.xml",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
 }
