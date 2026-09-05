@@ -281,7 +281,7 @@ main {
 }
 @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .statement p { margin-bottom: 1.2rem; max-width: 62ch; }
-.statement .lede { font-size: 1.15rem; line-height: 1.7; }
+.statement .lede, .contact-block .lede { font-size: clamp(1.2rem, 1.9vw, 1.55rem); line-height: 1.55; max-width: 40ch; }
 
 .cv h2 {
   font-size: 0.8rem;
@@ -596,7 +596,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   object-fit: cover;
   object-position: 50% 45%;
 }
-.hero-full .hero-caption {
+.hero-full .hero-caption, .hero-band .hero-caption {
   position: absolute;
   left: 0;
   right: 0;
@@ -607,7 +607,25 @@ html.js .reveal.in { opacity: 1; transform: none; }
   gap: 0.5rem 1rem;
   pointer-events: none;
 }
-.hero-full .hero-caption > * { pointer-events: auto; }
+.hero-full .hero-caption > *, .hero-band .hero-caption > * { pointer-events: auto; }
+
+/* secondary pages open on a shorter ambient band of a work */
+.hero-band {
+  position: relative;
+  margin: 0;
+  height: 52vh;
+  height: 52svh;
+  min-height: 300px;
+  max-height: 600px;
+  background: var(--bg-raised);
+  overflow: hidden;
+}
+.hero-band video {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+}
 .hero-chip {
   display: inline-flex;
   align-items: center;
@@ -690,7 +708,8 @@ html.js .reveal.in { opacity: 1; transform: none; }
 @media (max-width: 640px) {
   .hero-full { min-height: 0; height: calc(100svh - var(--header-h, 63px)); }
   .hero-full video { object-position: 62% 45%; }
-  .hero-full .hero-caption { padding: 0.8rem 1rem; }
+  .hero-full .hero-caption, .hero-band .hero-caption { padding: 0.8rem 1rem; }
+  .hero-band { height: 42svh; min-height: 240px; }
   .hero-chip { font-size: 0.64rem; padding: 0.42rem 0.65rem; }
   .hero-full .hero-chip:not(.sound-toggle) { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
   .scroll-cue { display: none; }

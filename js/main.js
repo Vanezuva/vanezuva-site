@@ -76,8 +76,25 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     entries.forEach(function (en) {
       if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
   els.forEach(function (el) { io.observe(el); });
+})();
+
+// Ambient loops (autoplay, muted, no controls) play only while on screen:
+// no decoding off screen, and no sound once the visitor has scrolled past the homepage hero.
+(function () {
+  var vids = document.querySelectorAll('video[autoplay][muted]:not([controls])');
+  if (!vids.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      var v = en.target;
+      v.dataset.inView = en.isIntersecting ? '1' : '0';
+      if (document.body.classList.contains('lightbox-open')) return;
+      if (en.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else v.pause();
+    });
+  }, { threshold: 0.15 });
+  vids.forEach(function (v) { io.observe(v); });
 })();
 
 // Gallery cards with data-preview play a short silent clip over the poster:
@@ -146,7 +163,6 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
   // hero video first in the cycle
   var hero = document.querySelector('.hero');
   var heroVideo = hero && hero.querySelector('video[src]');
-  var heroInView = true;
   if (heroVideo) {
     var cap = hero.querySelector('.hero-caption');
     entries.push({
@@ -158,18 +174,6 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     if (!heroVideo.controls) {
       heroVideo.style.cursor = 'pointer';
       heroVideo.addEventListener('click', function () { open(0); });
-
-      // pause the loop while it is off screen: no decoding, and no sound after the visitor scrolls on
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (ents) {
-          ents.forEach(function (en) {
-            heroInView = en.isIntersecting;
-            if (lb.classList.contains('open')) return;
-            if (heroInView) { var p = heroVideo.play(); if (p && p.catch) p.catch(function () {}); }
-            else heroVideo.pause();
-          });
-        }, { threshold: 0.15 }).observe(hero);
-      }
     }
   }
 
@@ -260,6 +264,7 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     show(index);
     lb.classList.add('open');
     lb.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
     document.body.style.overflow = 'hidden';
     if (heroVideo) heroVideo.pause();
   }
@@ -271,12 +276,13 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     lb.classList.remove('open');
     lb.setAttribute('aria-hidden', 'true');
     current = -1;
+    document.body.classList.remove('lightbox-open');
     document.body.style.overflow = '';
     clearTimer = setTimeout(function () {
       clearTimer = null;
       if (!lb.classList.contains('open')) media.innerHTML = '';
     }, reduceMotion ? 0 : 320);
-    if (heroVideo && !heroVideo.controls && heroInView) {
+    if (heroVideo && !heroVideo.controls && heroVideo.dataset.inView !== '0') {
       var p = heroVideo.play(); if (p && p.catch) p.catch(function () {});
     }
   }
