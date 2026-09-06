@@ -626,6 +626,11 @@ html.js .reveal.in { opacity: 1; transform: none; }
   aspect-ratio: auto;
   object-fit: cover;
 }
+/* square works: the band grows to fit the whole square on black instead of cropping it */
+.hero-band.square { height: min(72vh, 100vw); height: min(72svh, 100vw); max-height: none; background: #000; }
+.hero-band.square video { object-fit: contain; background: #000; }
+/* caption box matches the square's width so the chip aligns with the work, not the viewport */
+.hero-band.square .hero-caption { left: 50%; right: auto; width: min(72vh, 100vw); width: min(72svh, 100vw); transform: translateX(-50%); }
 .hero-chip {
   max-width: 100%;
   display: inline-flex;
@@ -716,7 +721,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .hero-band { height: 42svh; min-height: 240px; }
   .hero-chip { font-size: 0.64rem; padding: 0.42rem 0.65rem; }
   /* caption chip on its own row; Watch and Sound share the row below it */
-  .hero-full .hero-caption > span.hero-chip { flex-basis: 100%; flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+  .hero-full .hero-caption > span.hero-chip, .hero-band .hero-caption > span.hero-chip { flex-basis: 100%; flex-direction: column; align-items: flex-start; gap: 0.15rem; }
   .hero-play, .sound-toggle { white-space: nowrap; }
   .scroll-cue { display: none; }
   .hero-wide .hero-caption { padding: 0.6rem 1rem 0; }
