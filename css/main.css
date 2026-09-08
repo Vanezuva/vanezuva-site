@@ -643,8 +643,6 @@ html.js .reveal.in { opacity: 1; transform: none; }
   text-transform: uppercase;
   line-height: 1.4;
   padding: 0.5rem 0.8rem;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 .hero-chip .sub { color: var(--text-dim); }
 .sound-toggle, .hero-play {
@@ -665,6 +663,17 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .sound-toggle .on { display: none; }
 .sound-toggle[aria-pressed="true"] .on { display: block; }
 .sound-toggle[aria-pressed="true"] .off { display: none; }
+/* homepage rotation: two stacked loops crossfade; square works sit whole on black */
+.hero-full video.rotor {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: #000;
+  transition: opacity 1s ease;
+}
+.hero-full video.rotor.is-active { opacity: 1; }
+.hero-full video.contain { object-fit: contain; }
+
 /* thin line at the bottom centre that draws downward; visible on light and dark frames */
 .scroll-cue {
   position: absolute;
@@ -731,6 +740,6 @@ html.js .reveal.in { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
   html.js .reveal { opacity: 1; transform: none; transition: none; }
   .scroll-cue { animation: none; opacity: 0.6; }
-  .lightbox, .lightbox.open, .lightbox-inner { transition: none; }
+  .lightbox, .lightbox.open, .lightbox-inner, .hero-full video.rotor { transition: none; }
   .work .thumb video.preview { display: none; }
 }

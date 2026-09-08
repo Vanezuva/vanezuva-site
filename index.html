@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.vanezuva.com/">
   <meta property="og:image" content="https://www.vanezuva.com/media/airwaves_white_noise_tuning_poster.jpg">
-  <link rel="stylesheet" href="css/main.css?v=19">
+  <link rel="stylesheet" href="css/main.css?v=20">
 </head>
 <body>
 
@@ -41,11 +41,15 @@
 </header>
 
 <section class="hero hero-full">
-    <video src="media/airwaves_white_noise_tuning.mp4"
-           poster="media/airwaves_white_noise_tuning_poster.jpg"
-           autoplay muted loop playsinline></video>
+    <!-- the hero rotates through the works on this page; the list below drives it -->
+    <video poster="media/airwaves_white_noise_tuning_poster.jpg" muted playsinline preload="auto"></video>
+    <video muted playsinline preload="auto"></video>
     <div class="hero-caption">
-      <span class="hero-chip"><span class="title">AIRWAVES (white noise tuning)</span><span class="sub">single-channel video</span></span>
+      <span class="hero-chip"><span class="title">AIRWAVES (white noise tuning)</span><span class="sub">single-channel video, 1:00</span></span>
+      <button class="hero-chip hero-play" type="button">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+        <span>View work</span>
+      </button>
     <button class="hero-chip sound-toggle" id="heroSound" type="button" aria-pressed="false" aria-label="Turn sound on">
       <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
       <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
@@ -53,6 +57,97 @@
     </button>
     </div>
     <span class="scroll-cue" aria-hidden="true"></span>
+  <script type="application/json" id="heroRotation">
+[
+  {
+    "title": "AIRWAVES (white noise tuning)",
+    "sub": "single-channel video, 1:00",
+    "src": "media/hero/airwaves_white_noise_tuning.mp4",
+    "mobile": "media/mobile/airwaves_white_noise_tuning.mp4",
+    "poster": "media/hero/airwaves_white_noise_tuning.jpg",
+    "full": "media/airwaves_white_noise_tuning.mp4",
+    "link": "https://objkt.com/tokens/KT1Cjfuo5vEiPGByBb6BzaxFDQvJH24eppp5/3",
+    "linklabel": "Collect ↗"
+  },
+  {
+    "title": "AIRWAVES: Ripple Effects",
+    "sub": "hybrid media project, 3:43",
+    "src": "media/ambient/airwaves_ripple_effects.mp4",
+    "mobile": "media/mobile/airwaves_ripple_effects.mp4",
+    "poster": "media/hero/airwaves_ripple_effects.jpg",
+    "full": "media/airwaves_ripple_effects.mp4",
+    "link": "/airwaves-ripple-effects",
+    "linklabel": "Project page →"
+  },
+  {
+    "title": "Orinoco (PORTals)",
+    "sub": "single-channel video, 0:56",
+    "src": "media/hero/orinoco_portals.mp4",
+    "mobile": "media/mobile/orinoco_portals.mp4",
+    "poster": "media/hero/orinoco_portals.jpg",
+    "full": "media/orinoco_portals.mp4",
+    "link": "https://objkt.com/tokens/KT1LruoY7jir29GUMUYwxnYsbmiVmNcaML7A/23",
+    "linklabel": "Collect ↗"
+  },
+  {
+    "title": "RAW MATERIALS I",
+    "sub": "single-channel video, 0:48",
+    "square": true,
+    "src": "media/hero/raw_materials_i.mp4",
+    "mobile": "media/mobile/raw_materials_i.mp4",
+    "poster": "media/hero/raw_materials_i.jpg",
+    "full": "media/raw_materials_i.mp4",
+    "link": "https://objkt.com/tokens/KT1C41eUvXLpCamL5h27aBqhUE7v2kXi9KpT/1",
+    "linklabel": "Collect ↗"
+  },
+  {
+    "title": "RAW MATERIALS II",
+    "sub": "single-channel video, 1:13",
+    "src": "media/hero/raw_materials_ii.mp4",
+    "mobile": "media/mobile/raw_materials_ii.mp4",
+    "poster": "media/hero/raw_materials_ii.jpg",
+    "full": "media/raw_materials_ii.mp4",
+    "link": "https://objkt.com/tokens/KT1C41eUvXLpCamL5h27aBqhUE7v2kXi9KpT/8",
+    "linklabel": "Collect ↗"
+  },
+  {
+    "title": "AIRWAVES (Signal #1)",
+    "sub": "single-channel video, 0:10",
+    "src": "media/ripple_clip_1.mp4",
+    "mobile": "media/mobile/ripple_clip_1.mp4",
+    "poster": "media/hero/ripple_clip_1.jpg",
+    "full": "media/ripple_clip_1.mp4"
+  },
+  {
+    "title": "AIRWAVES (Signal #2)",
+    "sub": "single-channel video, 0:36",
+    "src": "media/hero/airwaves_signal_2.mp4",
+    "mobile": "media/mobile/airwaves_signal_2.mp4",
+    "poster": "media/hero/airwaves_signal_2.jpg",
+    "full": "media/airwaves_signal_2.mp4",
+    "link": "https://www.transient.xyz/mint/airwaves-signal-2",
+    "linklabel": "Collect ↗"
+  },
+  {
+    "title": "Water (Veins)",
+    "sub": "single-channel video, 0:11",
+    "src": "media/water_veins.mp4",
+    "mobile": "media/mobile/water_veins.mp4",
+    "poster": "media/hero/water_veins.jpg",
+    "full": "media/water_veins.mp4",
+    "link": "https://www.transient.xyz/mint/water-veins",
+    "linklabel": "Collect ↗"
+  },
+  {
+    "title": "CAJA DE RITMO [BEAT BOX]",
+    "sub": "single-channel video, 3:59, 2024",
+    "src": "media/hero/caja_de_ritmo.mp4",
+    "mobile": "media/mobile/caja_de_ritmo.mp4",
+    "poster": "media/hero/caja_de_ritmo.jpg",
+    "full": "media/caja_de_ritmo.mp4"
+  }
+]
+  </script>
 </section>
 
 <main>
@@ -192,7 +287,7 @@
   </div>
 </footer>
 
-<script src="js/main.js?v=13"></script>
+<script src="js/main.js?v=14"></script>
   <!-- Vercel Web Analytics (privacy-friendly, cookieless) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

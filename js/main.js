@@ -1,6 +1,8 @@
 // Marks that scripting is on, so CSS can hide reveal elements until they enter view.
 document.documentElement.classList.add('js');
 var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var isMobile = !!(window.matchMedia && window.matchMedia('(max-width: 640px)').matches);
+function playVideo(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
 
 // Collect dropdown: reliable toggle + keep the mobile panel pinned under the header
 (function () {
@@ -80,6 +82,13 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
   els.forEach(function (el) { io.observe(el); });
 })();
 
+// Heroes and bands carry data-src and data-src-mobile; phones get the lighter file.
+(function () {
+  document.querySelectorAll('video[data-src]').forEach(function (v) {
+    v.src = (isMobile && v.dataset.srcMobile) || v.dataset.src;
+  });
+})();
+
 // Ambient loops (autoplay, muted, no controls) play only while on screen:
 // no decoding off screen, and no sound once the visitor has scrolled past the homepage hero.
 (function () {
@@ -95,6 +104,114 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     });
   }, { threshold: 0.15 });
   vids.forEach(function (v) { io.observe(v); });
+})();
+
+// Hero: the sound toggle, and on the homepage a rotation through the works on the page.
+// Two stacked video elements crossfade; the next work is readied a few seconds before the current one ends.
+(function () {
+  var hero = document.querySelector('.hero-full, .hero-band');
+  if (!hero) return;
+  var vids = Array.prototype.slice.call(hero.querySelectorAll('video'));
+  var soundBtn = document.getElementById('heroSound');
+  var muted = true;
+
+  function setMuted(m) {
+    muted = m;
+    vids.forEach(function (v) { v.muted = m; });
+    if (soundBtn) {
+      soundBtn.setAttribute('aria-pressed', m ? 'false' : 'true');
+      soundBtn.setAttribute('aria-label', m ? 'Turn sound on' : 'Turn sound off');
+    }
+  }
+  if (soundBtn) {
+    soundBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setMuted(!muted);
+      var v = hero.querySelector('video.is-active') || vids[0];
+      if (!muted && v && v.paused) playVideo(v);
+    });
+  }
+
+  var listEl = document.getElementById('heroRotation');
+  if (!listEl || vids.length < 2) return;
+  var items;
+  try { items = JSON.parse(listEl.textContent); } catch (err) { return; }
+  if (!items || !items.length) return;
+
+  var titleEl = hero.querySelector('.hero-caption .title');
+  var subEl = hero.querySelector('.hero-caption .sub');
+  var index = Math.floor(Math.random() * items.length);   // a different work each visit
+  var active = 0;                                          // which of the two elements is showing
+  var inView = true, held = false, preloaded = -1;
+
+  function srcOf(item) { return (isMobile && item.mobile) || item.src; }
+  function load(v, item) {
+    v.classList.toggle('contain', !!item.square);
+    if (item.poster) v.setAttribute('poster', item.poster);
+    v.muted = true;
+    v.src = srcOf(item);
+    v.load();
+  }
+  function caption(item) {
+    if (titleEl) titleEl.textContent = item.title || '';
+    if (subEl) subEl.textContent = item.sub || '';
+  }
+  function current() {
+    var it = items[index];
+    return { video: it.full || it.src, title: it.title || '', sub: it.sub || '', link: it.link, linklabel: it.linklabel };
+  }
+
+  function onTime(e) {
+    var v = e.target;
+    if (!v.classList.contains('is-active') || !(v.duration > 0)) return;
+    if (preloaded === -1 && v.duration - v.currentTime < 3) {
+      preloaded = (index + 1) % items.length;
+      var n = vids[1 - active];
+      load(n, items[preloaded]);
+      playVideo(n);            // hidden and muted: makes phones buffer it ahead of time
+    }
+  }
+  function onEnded(e) {
+    var v = e.target;
+    if (!v.classList.contains('is-active')) return;
+    var n = vids[1 - active];
+    if (preloaded === -1) { preloaded = (index + 1) % items.length; load(n, items[preloaded]); }
+    index = preloaded; preloaded = -1;
+    try { n.currentTime = 0; } catch (err) {}
+    n.muted = muted;
+    if (!held && inView) playVideo(n);
+    n.classList.add('is-active');
+    v.classList.remove('is-active');
+    active = 1 - active;
+    caption(items[index]);
+    v.pause();
+  }
+  vids.forEach(function (v) {
+    v.classList.add('rotor');
+    v.addEventListener('timeupdate', onTime);
+    v.addEventListener('ended', onEnded);
+  });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        inView = en.isIntersecting;
+        if (held) return;
+        if (inView) playVideo(vids[active]); else vids[active].pause();
+      });
+    }, { threshold: 0.15 }).observe(hero);
+  }
+
+  hero.__current = current;
+  hero.__pause = function () { held = true; vids.forEach(function (v) { v.pause(); }); };
+  hero.__resume = function () { held = false; if (inView) playVideo(vids[active]); };
+
+  var first = vids[active];
+  load(first, items[index]);
+  first.classList.add('is-active');
+  caption(items[index]);
+  first.muted = muted;
+  playVideo(first);
 })();
 
 // Gallery cards with data-preview play a short silent clip over the poster:
@@ -126,12 +243,16 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     return v;
   }
   function start(card) {
-    var p = ensure(card).play();
-    if (p && p.catch) p.catch(function () {});
+    var v = ensure(card);
+    if (!v.getAttribute('src')) v.src = card.dataset.preview;
+    playVideo(v);
   }
   function stop(card) {
     var v = card.querySelector('video.preview');
-    if (v) v.pause();
+    if (v) {
+      v.pause();
+      if (!hoverable) { v.removeAttribute('src'); v.load(); }
+    }
     card.classList.remove('playing');
   }
 
@@ -162,34 +283,32 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
 
   // hero video first in the cycle
   var hero = document.querySelector('.hero');
-  var heroVideo = hero && hero.querySelector('video[src]');
-  if (heroVideo) {
+  var heroVideo = hero && hero.querySelector('video');
+  var rotating = !!(hero && typeof hero.__current === 'function');
+  if (heroVideo && (rotating || heroVideo.dataset.full || heroVideo.dataset.src || heroVideo.getAttribute('src'))) {
     var cap = hero.querySelector('.hero-caption');
-    entries.push({
-      video: heroVideo.dataset.full || heroVideo.getAttribute('src'),
+    entries.push(rotating ? hero.__current() : {
+      video: heroVideo.dataset.full || heroVideo.dataset.src || heroVideo.getAttribute('src'),
       title: cap ? (cap.querySelector('.title') || {}).textContent || '' : '',
       sub: cap ? (cap.querySelector('.sub') || cap.querySelector('span:last-child') || {}).textContent || '' : ''
     });
-    // heroes without controls (homepage loop) open the lightbox on click
+    // heroes without controls (the loops) open the lightbox on click
     if (!heroVideo.controls) {
-      heroVideo.style.cursor = 'pointer';
-      heroVideo.addEventListener('click', function () { open(0); });
+      hero.querySelectorAll('video').forEach(function (v) {
+        v.style.cursor = 'pointer';
+        v.addEventListener('click', function () { open(0); });
+      });
       var playBtn = hero.querySelector('.hero-play');
       if (playBtn) playBtn.addEventListener('click', function (e) { e.stopPropagation(); open(0); });
     }
   }
-
-  // sound toggle on the homepage hero (autoplay must start muted; this is the visitor's choice)
-  var soundBtn = document.getElementById('heroSound');
-  if (soundBtn && heroVideo) {
-    soundBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      heroVideo.muted = !heroVideo.muted;
-      var on = !heroVideo.muted;
-      soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      soundBtn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
-      if (on && heroVideo.paused) { var p = heroVideo.play(); if (p && p.catch) p.catch(function () {}); }
-    });
+  function pauseHero() {
+    if (hero && hero.__pause) hero.__pause();
+    else if (heroVideo) heroVideo.pause();
+  }
+  function resumeHero() {
+    if (hero && hero.__resume) hero.__resume();
+    else if (heroVideo && !heroVideo.controls && heroVideo.dataset.inView !== '0') playVideo(heroVideo);
   }
 
   var heroOffset = entries.length;
@@ -254,6 +373,7 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
     sub.textContent = e.sub;
     if (e.link) {
       link.href = e.link;
+      link.target = /^https?:/.test(e.link) ? '_blank' : '_self';
       link.textContent = e.linklabel || 'More ↗';
       link.style.display = 'inline';
     } else {
@@ -263,12 +383,13 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
 
   function open(index) {
     if (clearTimer) { clearTimeout(clearTimer); clearTimer = null; }
+    if (index === 0 && rotating) entries[0] = hero.__current();
     show(index);
     lb.classList.add('open');
     lb.setAttribute('aria-hidden', 'false');
     document.body.classList.add('lightbox-open');
     document.body.style.overflow = 'hidden';
-    if (heroVideo) heroVideo.pause();
+    pauseHero();
   }
 
   function close() {
@@ -284,9 +405,7 @@ var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-m
       clearTimer = null;
       if (!lb.classList.contains('open')) media.innerHTML = '';
     }, reduceMotion ? 0 : 320);
-    if (heroVideo && !heroVideo.controls && heroVideo.dataset.inView !== '0') {
-      var p = heroVideo.play(); if (p && p.catch) p.catch(function () {});
-    }
+    resumeHero();
   }
 
   function step(delta) {
