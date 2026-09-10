@@ -117,7 +117,8 @@ function playVideo(v) { var p = v.play(); if (p && p.catch) p.catch(function () 
 
   function setMuted(m) {
     muted = m;
-    vids.forEach(function (v) { v.muted = m; });
+    // only the showing loop carries sound; a loop buffering behind it stays silent until the swap
+    vids.forEach(function (v) { v.muted = m ? true : !v.classList.contains('is-active'); });
     if (soundBtn) {
       soundBtn.setAttribute('aria-pressed', m ? 'false' : 'true');
       soundBtn.setAttribute('aria-label', m ? 'Turn sound on' : 'Turn sound off');
