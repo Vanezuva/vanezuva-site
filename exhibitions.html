@@ -39,14 +39,14 @@
 </header>
 
 <section class="hero hero-full">
-    <video data-src="media/ambient/exhibition_reel.mp4" data-src-mobile="media/mobile/exhibition_reel.mp4" data-full="media/exhibitions/exhibition_reel.mp4"
-           poster="media/exhibitions/exhibition_reel_poster.jpg"
-           autoplay muted loop playsinline></video>
+    <!-- the hero rotates through exhibition videos; the list below drives it -->
+    <video poster="media/hero/ex_vorspiel_witness.jpg" muted playsinline preload="auto"></video>
+    <video muted playsinline preload="auto"></video>
     <div class="hero-caption">
-      <span class="hero-chip"><span class="title">Exhibition Reel</span><span class="sub">selected installations, 2024–2025</span></span>
+      <span class="hero-chip"><span class="title">Vorspiel: Witness</span><span class="sub">Opening Act · SSFF &amp; ASIA 2026, MoN Takanawa, Tokyo</span></span>
       <button class="hero-chip hero-play" type="button">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
-        <span>Watch the reel · 2:33</span>
+        <span>View work</span>
       </button>
     <button class="hero-chip sound-toggle" id="heroSound" type="button" aria-pressed="false" aria-label="Turn sound on">
       <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
@@ -55,6 +55,25 @@
     </button>
     </div>
     <span class="scroll-cue" aria-hidden="true"></span>
+  <script type="application/json" id="heroRotation">
+[
+  {"title": "Vorspiel: Witness", "sub": "Opening Act · SSFF & ASIA 2026, MoN Takanawa, Tokyo",
+   "src": "media/hero/ex_vorspiel_witness.mp4", "mobile": "media/mobile/ex_vorspiel_witness.mp4", "poster": "media/hero/ex_vorspiel_witness.jpg",
+   "full": "media/hero/ex_vorspiel_witness.mp4", "link": "https://www.youtube.com/watch?v=mrS9wzxy50g", "linklabel": "Watch on YouTube ↗"},
+  {"title": "Orinoco (PORTals)", "sub": "Exhibition video · THE OCEAN HAS INFINITE WAVES, SCOPE Art Basel Miami, 2025",
+   "src": "media/hero/ex_orinoco_portals.mp4", "mobile": "media/mobile/ex_orinoco_portals.mp4", "poster": "media/hero/ex_orinoco_portals.jpg",
+   "full": "media/exhibitions/art_basel_2025_v2.mp4", "link": "https://objkt.com/tokens/KT1LruoY7jir29GUMUYwxnYsbmiVmNcaML7A/23", "linklabel": "Collect ↗"},
+  {"title": "SUR (REAL) CONNECTIONS I", "sub": "Installation view · NFT LA, Superchief Gallery, Los Angeles, 2025",
+   "src": "media/hero/ex_sur_real_connections.mp4", "mobile": "media/mobile/ex_sur_real_connections.mp4", "poster": "media/hero/ex_sur_real_connections.jpg",
+   "full": "media/hero/ex_sur_real_connections.mp4", "link": "https://www.transient.xyz/nfts/ethereum/0xa07f5ce0ad7117be0e4d55a30b448de8cd1da4a7/1", "linklabel": "Collect ↗"},
+  {"title": "RAW MATERIALS I", "sub": "Exhibition video · Art on Tezos: In Motion, NFC Lisbon, 2024",
+   "src": "media/hero/ex_raw_materials_i.mp4", "mobile": "media/mobile/ex_raw_materials_i.mp4", "poster": "media/hero/ex_raw_materials_i.jpg",
+   "full": "media/hero/ex_raw_materials_i.mp4", "link": "https://www.youtube.com/watch?v=-_lFttkFeXY&t=834s", "linklabel": "Watch on YouTube ↗"},
+  {"title": "Water (Veins)", "sub": "Installation view · SCOPE Art Show, Art Basel Miami, 2024",
+   "src": "media/hero/ex_water_veins.mp4", "mobile": "media/mobile/ex_water_veins.mp4", "poster": "media/hero/ex_water_veins.jpg",
+   "full": "media/hero/ex_water_veins.mp4", "link": "https://www.transient.xyz/mint/water-veins", "linklabel": "Collect ↗"}
+]
+  </script>
 </section>
 
 <main>
